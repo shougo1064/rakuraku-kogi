@@ -2,7 +2,7 @@ test:
   adapter: postgresql
   encoding: unicode
   pool: 5
-  database: posting_note_test
+  database: rakuraku_kogi_test
   username: postgres
   password: postgres
   host: localhost
