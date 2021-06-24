@@ -21,10 +21,10 @@
 #
 FactoryBot.define do
   factory :homework do
-    title { "MyString" }
-    body { "MyText" }
-    action { "2021-06-22 19:47:59" }
-    deadline { "2021-06-22 19:47:59" }
-    user { nil }
+    title { Faker::Lorem.sentence }
+    body { Faker::Lorem.sentence }
+    action { Faker::Date.between(2.days.ago, Date.today) }
+    deadline { Faker::Date.between(2.days.ago, Date.today) }
+    user
   end
 end

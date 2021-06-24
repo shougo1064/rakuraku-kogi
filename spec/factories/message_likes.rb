@@ -20,7 +20,7 @@
 #
 FactoryBot.define do
   factory :message_like do
-    user { nil }
-    message { nil }
+    user
+    message
   end
 end

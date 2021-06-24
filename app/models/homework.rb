@@ -22,9 +22,10 @@
 class Homework < ApplicationRecord
   belongs_to :user
 
-  validates :title, presenve: true, length: { maximum: 20 }
+  validates :title, presence: true, length: { maximum: 20 }
   validates :body, presence: true, length: { maximum: 50 }
-  validates :action, presence: true, pretend_ago: true
+  validates :action, presence: true
+  validate :pretend_ago
   validates :deadline, presence: true
   validates :user_id, presence: true
 

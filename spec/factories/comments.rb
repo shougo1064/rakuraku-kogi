@@ -3,7 +3,7 @@
 # Table name: comments
 #
 #  id         :bigint           not null, primary key
-#  boey       :text
+#  body       :text
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  message_id :bigint           not null
@@ -21,8 +21,8 @@
 #
 FactoryBot.define do
   factory :comment do
-    boey { "MyText" }
-    user { nil }
-    message { nil }
+    body { Faker::Lorem.sentence }
+    user
+    message
   end
 end

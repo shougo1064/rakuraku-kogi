@@ -19,8 +19,8 @@
 #
 FactoryBot.define do
   factory :message do
-    title { "MyString" }
-    body { "MyText" }
-    user { nil }
+    title { Faker::Lorem.sentence }
+    body { Faker::Lorem.sentence }
+    user
   end
 end
