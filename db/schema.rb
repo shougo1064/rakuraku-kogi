@@ -10,38 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_22_105134) do
+ActiveRecord::Schema.define(version: 2021_06_24_021804) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "article_tags", force: :cascade do |t|
-    t.bigint "message_id", null: false
-    t.bigint "tag_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["message_id"], name: "index_article_tags_on_message_id"
-    t.index ["tag_id"], name: "index_article_tags_on_tag_id"
-  end
-
   create_table "comments", force: :cascade do |t|
-    t.text "boey"
+    t.text "body"
     t.bigint "user_id", null: false
     t.bigint "message_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["message_id"], name: "index_comments_on_message_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
-  end
-
-  create_table "follows", force: :cascade do |t|
-    t.bigint "user_id"
-    t.bigint "follower_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["follower_id"], name: "index_follows_on_follower_id"
-    t.index ["user_id", "follower_id"], name: "index_follows_on_user_id_and_follower_id", unique: true
-    t.index ["user_id"], name: "index_follows_on_user_id"
   end
 
   create_table "homeworks", force: :cascade do |t|
@@ -64,6 +45,15 @@ ActiveRecord::Schema.define(version: 2021_06_22_105134) do
     t.index ["user_id"], name: "index_message_likes_on_user_id"
   end
 
+  create_table "message_tags", force: :cascade do |t|
+    t.bigint "message_id", null: false
+    t.bigint "tag_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["message_id"], name: "index_message_tags_on_message_id"
+    t.index ["tag_id"], name: "index_message_tags_on_tag_id"
+  end
+
   create_table "messages", force: :cascade do |t|
     t.string "title"
     t.text "body"
@@ -71,6 +61,16 @@ ActiveRecord::Schema.define(version: 2021_06_22_105134) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_messages_on_user_id"
+  end
+
+  create_table "relationships", force: :cascade do |t|
+    t.bigint "following_id"
+    t.bigint "follower_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["follower_id"], name: "index_relationships_on_follower_id"
+    t.index ["following_id", "follower_id"], name: "index_relationships_on_following_id_and_follower_id", unique: true
+    t.index ["following_id"], name: "index_relationships_on_following_id"
   end
 
   create_table "tags", force: :cascade do |t|
@@ -99,17 +99,19 @@ ActiveRecord::Schema.define(version: 2021_06_22_105134) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["name"], name: "index_users_on_name", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
-  add_foreign_key "article_tags", "messages"
-  add_foreign_key "article_tags", "tags"
   add_foreign_key "comments", "messages"
   add_foreign_key "comments", "users"
-  add_foreign_key "follows", "users", column: "follower_id"
   add_foreign_key "homeworks", "users"
   add_foreign_key "message_likes", "messages"
   add_foreign_key "message_likes", "users"
+  add_foreign_key "message_tags", "messages"
+  add_foreign_key "message_tags", "tags"
   add_foreign_key "messages", "users"
+  add_foreign_key "relationships", "users", column: "follower_id"
+  add_foreign_key "relationships", "users", column: "following_id"
 end
