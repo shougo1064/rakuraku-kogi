@@ -20,5 +20,18 @@
 require "rails_helper"
 
 RSpec.describe Message, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  let(:user) { create(:user) }
+  context "body が指定されているとき" do
+    let(:message) { build(:message, user: user) }
+    it "メッセージが投稿できる" do
+      expect(message).to be_valid
+    end
+  end
+
+  context "body が指定されていないとき" do
+    let(:message) { build(:message, user: user, body: nil) }
+    it "メッセージが投稿できない" do
+      expect(message).to be_invalid
+    end
+  end
 end

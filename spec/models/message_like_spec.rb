@@ -21,5 +21,26 @@
 require "rails_helper"
 
 RSpec.describe MessageLike, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  let(:user) { create(:user) }
+  let(:message) { create(:message) }
+  context "ユーザーとユーザーのメッセージの id が存在するとき" do
+    let(:message_like) { build(:message_like, user_id: user.id, message_id: message.id) }
+    it "いいねできる" do
+      expect(message_like).to be_valid
+    end
+  end
+
+  context "ユーザーの id が存在しないとき" do
+    let(:message_like) { build(:message_like, user_id: nil, message_id: message.id) }
+    it "いいねできない" do
+      expect(message_like).to be_invalid
+    end
+  end
+
+  context "ユーザーのメッセージの id が存在しないとき" do
+    let(:message_like) { build(:message_like, user_id: user.id, message_id: nil) }
+    it "　いいねできない" do
+      expect(message_like).to be_invalid
+    end
+  end
 end

@@ -30,6 +30,6 @@ class Homework < ApplicationRecord
   validates :user_id, presence: true
 
   def pretend_ago
-    errors.add(:action, "は、今日を含む過去の日付を入力して下さい") if action.nil? || action < Data.today
+    errors.add(:action, "は、今日を含む過去の日付を入力して下さい") if action.nil? || action < Time.zone.today
   end
 end

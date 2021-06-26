@@ -24,5 +24,4 @@ class Message < ApplicationRecord
   has_many :message_tags, dependent: :destroy
 
   validates :body, presence: true
-  validates :user_id, presence: true
 end

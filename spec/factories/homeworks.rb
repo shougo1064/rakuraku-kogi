@@ -23,8 +23,8 @@ FactoryBot.define do
   factory :homework do
     title { Faker::Lorem.sentence }
     body { Faker::Lorem.sentence }
-    action { Faker::Date.between(2.days.ago, Date.today) }
-    deadline { Faker::Date.between(2.days.ago, Date.today) }
+    action { Faker::Date.between(from: Time.zone.today, to: 1.months.since) }
+    deadline { Faker::Date.between(from: Time.zone.today, to: 2.days.ago) }
     user
   end
 end

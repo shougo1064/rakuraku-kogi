@@ -10,5 +10,17 @@
 require "rails_helper"
 
 RSpec.describe Tag, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  context "name が指定されているとき" do
+    let(:tag) { build(:tag) }
+    it "メッセージにタグ付けできる" do
+      expect(tag).to be_valid
+    end
+  end
+
+  context "name が指定されていないとき" do
+    let(:tag) { build(:tag, name: nil) }
+    it "メッセージにタグ付けできない" do
+      expect(tag).to be_invalid
+    end
+  end
 end

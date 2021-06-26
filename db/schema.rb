@@ -25,16 +25,6 @@ ActiveRecord::Schema.define(version: 2021_06_24_021804) do
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
-  create_table "follows", force: :cascade do |t|
-    t.bigint "user_id"
-    t.bigint "follower_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["follower_id"], name: "index_follows_on_follower_id"
-    t.index ["user_id", "follower_id"], name: "index_follows_on_user_id_and_follower_id", unique: true
-    t.index ["user_id"], name: "index_follows_on_user_id"
-  end
-
   create_table "homeworks", force: :cascade do |t|
     t.string "title"
     t.text "body"
@@ -73,6 +63,16 @@ ActiveRecord::Schema.define(version: 2021_06_24_021804) do
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
+  create_table "relationships", force: :cascade do |t|
+    t.bigint "following_id"
+    t.bigint "follower_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["follower_id"], name: "index_relationships_on_follower_id"
+    t.index ["following_id", "follower_id"], name: "index_relationships_on_following_id_and_follower_id", unique: true
+    t.index ["following_id"], name: "index_relationships_on_following_id"
+  end
+
   create_table "tags", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
@@ -99,17 +99,19 @@ ActiveRecord::Schema.define(version: 2021_06_24_021804) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["name"], name: "index_users_on_name", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
   add_foreign_key "comments", "messages"
   add_foreign_key "comments", "users"
-  add_foreign_key "follows", "users", column: "follower_id"
   add_foreign_key "homeworks", "users"
   add_foreign_key "message_likes", "messages"
   add_foreign_key "message_likes", "users"
   add_foreign_key "message_tags", "messages"
   add_foreign_key "message_tags", "tags"
   add_foreign_key "messages", "users"
+  add_foreign_key "relationships", "users", column: "follower_id"
+  add_foreign_key "relationships", "users", column: "following_id"
 end
