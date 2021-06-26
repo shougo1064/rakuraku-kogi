@@ -39,6 +39,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable
   include DeviseTokenAuth::Concerns::User
 
+  validates :name, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 30 }
   has_many :homeworks, dependent: :destroy
   has_many :messages, dependent: :destroy
   has_many :message_likes, dependent: :destroy
