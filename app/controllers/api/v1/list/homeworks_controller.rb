@@ -15,11 +15,16 @@ module Api::V1
       render json: homework, serializer: Api::V1::HomeworkSerializer
     end
 
-		def update
-			homework = current_user.homeworks.find(params[:id])
-			homework.update!(homework_params)
+    def update
+      homework = current_user.homeworks.find(params[:id])
+      homework.update!(homework_params)
       render json: homework, serializer: Api::V1::HomeworkSerializer
-		end
+    end
+
+    def destroy
+      homework = current_user.homeworks.find(params[:id])
+      homework.destroy!
+    end
 
     private
 

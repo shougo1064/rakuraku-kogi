@@ -81,19 +81,34 @@ RSpec.describe "Api::V1::List::Homeworks", type: :request do
       end
     end
   end
+
   describe "PUT /api/v1/list/homeworks/:id" do
     subject { put(api_v1_list_homework_path(homework.id), params: params) }
 
     let(:params) { { homework: { title: "foo", created_at: 1.days.ago } } }
     let(:current_user) { create(:user) }
     before { allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user) }
+
     context "課題を更新するとき" do
       let!(:homework) { create(:homework, user: current_user) }
-      fit "適切な値のみ更新されている" do
+      it "適切な値のみ更新されている" do
         expect { subject }.to change { homework.reload.title }.from(homework.title).to(params[:homework][:title]) &
                               not_change { homework.reload.body } &
                               not_change { homework.reload.created_at }
       end
+    end
+  end
+
+  describe "DELETE /api/v1/list/homeworks/:id" do
+    subject { delete(api_v1_list_homework_path(homework.id)) }
+
+    let!(:homework) { create(:homework, user: current_user) }
+    let(:current_user) { create(:user) }
+    before { allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user) }
+
+    it "記事が削除できる" do
+      expect { subject }.to change { Homework.count }.by(-1)
+      expect(response).to have_http_status(:no_content)
     end
   end
 end
