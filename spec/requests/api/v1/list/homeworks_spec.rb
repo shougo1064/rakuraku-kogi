@@ -53,25 +53,29 @@ RSpec.describe "Api::V1::List::Homeworks", type: :request do
 
   describe "POST /api/v1/list/homeworks" do
     subject { post(api_v1_list_homeworks_path, params: params) }
+
     context "適切なパラメータを送信したとき" do
       let(:params) { { homework: attributes_for(:homework) } }
       let(:current_user) { create(:user) }
       before { allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user) }
-      it "課題の作成ができる"do
-      expect { subject }.to change { Homework.count }.by(1)
-      res = JSON.parse(response.body)
-      expect(res["title"]).to eq params[:homework][:title]
-      expect(res["body"]).to eq params[:homework][:body]
-      expect(res["action"]).to be_present
-      expect(res["deadline"]).to be_present
-      expect(res["user"]["id"]).to eq current_user.id
-      expect(response).to have_http_status(200)
+
+      it "課題の作成ができる" do
+        expect { subject }.to change { Homework.count }.by(1)
+        res = JSON.parse(response.body)
+        expect(res["title"]).to eq params[:homework][:title]
+        expect(res["body"]).to eq params[:homework][:body]
+        expect(res["action"]).to be_present
+        expect(res["deadline"]).to be_present
+        expect(res["user"]["id"]).to eq current_user.id
+        expect(response).to have_http_status(:ok)
       end
     end
+
     context "不適切なパラメータを送信したとき" do
       let(:params) { attributes_for(:homework) }
       let(:current_user) { create(:user) }
       before { allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user) }
+
       it "課題の作成に失敗する" do
         expect { subject }.to raise_error(ActionController::ParameterMissing)
       end

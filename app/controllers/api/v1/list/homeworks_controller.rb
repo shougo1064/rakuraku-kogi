@@ -10,15 +10,15 @@ module Api::V1
       render json: homework, serializer: Api::V1::HomeworkSerializer
     end
 
-		def create
-			homework = current_user.homeworks.create!(homework_params)
-			render json: homework, serializer: Api::V1::HomeworkSerializer
-		end
+    def create
+      homework = current_user.homeworks.create!(homework_params)
+      render json: homework, serializer: Api::V1::HomeworkSerializer
+    end
 
-		private
+    private
 
-			def homework_params
-				params.require(:homework).permit(:title, :body, :action, :deadline)
-			end
+      def homework_params
+        params.require(:homework).permit(:title, :body, :action, :deadline)
+      end
   end
 end
