@@ -19,6 +19,35 @@ RSpec.describe "Api::V1::List::Homeworks", type: :request do
       expect(res[0].keys).to eq ["id", "title", "action", "deadline", "updated_at", "user"]
       expect(res.map {|d| d["id"] }).to eq [homework3.id, homework1.id, homework2]
       expect(res[0]["user"].keys).to eq ["id", "name", "email"]
+      expect(res[0]["user"]["id"]).to eq current_user
+    end
+  end
+
+  describe "GET /api/v1/list/homeworks/:id" do
+    subject { get(api_v1_list_homework_path(homework_id)) }
+
+    context "存在する自分の課題の id を指定したとき" do
+      let(:homework_id) { homework.id }
+      let(:homework) { create(:homework) }
+      fit "指定した id の課題の詳細が取得できる" do
+        subject
+        res = JSON.parse(response.body)
+        expect(response).to have_http_status(:ok)
+        expect(res["id"]).to eq homework.id
+        expect(res["title"]).to eq homework.title
+        expect(res["body"]).to eq homework.body
+        expect(res["action"]).to be_present
+        expect(res["deadline"]).to be_present
+        expect(res["updated_at"]).to be_present
+        expect(res["user"].keys).to eq ["id", "name", "email"]
+      end
+    end
+
+    context "存在しない課題の id を指定したとき" do
+      let(:homework_id) { 100000 }
+      fit "課題の詳細が取得できない" do
+        expect { subject }.to raise_error(ActiveRecord::RecordNotFound)
+      end
     end
   end
 end
