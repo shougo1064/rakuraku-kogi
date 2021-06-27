@@ -7,7 +7,6 @@ Rails.application.routes.draw do
       namespace :list do
         resources :homeworks
       end
-
     end
   end
 end
