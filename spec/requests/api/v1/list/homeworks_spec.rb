@@ -2,15 +2,14 @@ require "rails_helper"
 
 RSpec.describe "Api::V1::List::Homeworks", type: :request do
   describe "GET /api/v1/list/homeworks" do
-    subject { get(api_v1_list_homeworks_path) }
+    subject { get(api_v1_list_homeworks_path, headers: headers) }
 
     let!(:homework1) { create(:homework, user: current_user, updated_at: 1.days.ago) }
     let!(:homework2) { create(:homework, user: current_user, updated_at: 3.days.ago) }
     let!(:homework3) { create(:homework, user: current_user) }
     let!(:homework4) { create(:homework) }
     let(:current_user) { create(:user) }
-    before { allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user) }
-
+    let(:headers) { current_user.create_new_auth_token }
     it "課題の一覧が取得できる" do
       subject
       res = JSON.parse(response.body)
@@ -52,12 +51,12 @@ RSpec.describe "Api::V1::List::Homeworks", type: :request do
   end
 
   describe "POST /api/v1/list/homeworks" do
-    subject { post(api_v1_list_homeworks_path, params: params) }
+    subject { post(api_v1_list_homeworks_path, params: params, headers: headers) }
 
     context "適切なパラメータを送信したとき" do
       let(:params) { { homework: attributes_for(:homework) } }
       let(:current_user) { create(:user) }
-      before { allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user) }
+      let(:headers) { current_user.create_new_auth_token }
 
       it "課題の作成ができる" do
         expect { subject }.to change { Homework.count }.by(1)
@@ -83,11 +82,11 @@ RSpec.describe "Api::V1::List::Homeworks", type: :request do
   end
 
   describe "PUT /api/v1/list/homeworks/:id" do
-    subject { put(api_v1_list_homework_path(homework.id), params: params) }
+    subject { put(api_v1_list_homework_path(homework.id), params: params, headers: headers) }
 
     let(:params) { { homework: { title: "foo", created_at: 1.days.ago } } }
     let(:current_user) { create(:user) }
-    before { allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user) }
+    let(:headers) { current_user.create_new_auth_token }
 
     context "課題を更新するとき" do
       let!(:homework) { create(:homework, user: current_user) }
@@ -100,11 +99,11 @@ RSpec.describe "Api::V1::List::Homeworks", type: :request do
   end
 
   describe "DELETE /api/v1/list/homeworks/:id" do
-    subject { delete(api_v1_list_homework_path(homework.id)) }
+    subject { delete(api_v1_list_homework_path(homework.id), headers: headers) }
 
     let!(:homework) { create(:homework, user: current_user) }
     let(:current_user) { create(:user) }
-    before { allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user) }
+    let(:headers) { current_user.create_new_auth_token }
 
     it "記事が削除できる" do
       expect { subject }.to change { Homework.count }.by(-1)
