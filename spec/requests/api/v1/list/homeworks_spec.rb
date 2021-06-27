@@ -73,7 +73,7 @@ RSpec.describe "Api::V1::List::Homeworks", type: :request do
     context "不適切なパラメータを送信したとき" do
       let(:params) { attributes_for(:homework) }
       let(:current_user) { create(:user) }
-      before { allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user) }
+      let(:headers) { current_user.create_new_auth_token }
 
       it "課題の作成に失敗する" do
         expect { subject }.to raise_error(ActionController::ParameterMissing)
