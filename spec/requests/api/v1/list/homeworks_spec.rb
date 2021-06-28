@@ -16,9 +16,9 @@ RSpec.describe "Api::V1::List::Homeworks", type: :request do
       expect(response).to have_http_status(:ok)
       expect(res.length).to eq 3
       expect(res[0].keys).to eq ["id", "title", "action", "deadline", "updated_at", "user"]
-      expect(res.map {|d| d["id"] }).to eq [homework3.id, homework1.id, homework2]
+      expect(res.map {|d| d["id"] }).to eq [homework3.id, homework1.id, homework2.id]
       expect(res[0]["user"].keys).to eq ["id", "name", "email"]
-      expect(res[0]["user"]["id"]).to eq current_user
+      expect(res[0]["user"]["id"]).to eq current_user.id
     end
   end
 
